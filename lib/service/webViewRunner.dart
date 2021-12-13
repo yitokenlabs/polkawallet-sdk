@@ -28,6 +28,7 @@ class WebViewRunner {
     Keyring keyringStorage,
     Function? onLaunched, {
     String? jsCode,
+    int port = 8080,
   }) async {
     /// reset state before webView launch or reload
     _msgHandlers = {};
@@ -42,7 +43,7 @@ class WebViewRunner {
     print('js file loaded');
 
     if (_web == null) {
-      await _startLocalServer();
+      await _startLocalServer(port: port);
 
       _web = new HeadlessInAppWebView(
         initialOptions: InAppWebViewGroupOptions(
@@ -81,7 +82,7 @@ class WebViewRunner {
 
       await _web!.run();
       _web!.webViewController.loadUrl(
-          urlRequest: URLRequest(url: Uri.parse("https://localhost:8080/")));
+          urlRequest: URLRequest(url: Uri.parse("https://localhost:$port")));
     } else {
       _tryReload();
     }
@@ -100,7 +101,7 @@ class WebViewRunner {
     _webViewLoaded = true;
   }
 
-  Future<void> _startLocalServer() async {
+  Future<void> _startLocalServer({int port = 8080}) async {
     final cert = await rootBundle
         .load("packages/polkawallet_sdk/lib/ssl/certificate.pem");
     final keys =
@@ -109,7 +110,7 @@ class WebViewRunner {
       ..useCertificateChainBytes(cert.buffer.asInt8List())
       ..usePrivateKeyBytes(keys.buffer.asInt8List());
     // Serves the API at localhost:8080 by default
-    final server = Jaguar(securityContext: security);
+    final server = Jaguar(securityContext: security, port: port);
     server.addRoute(serveFlutterAssets());
     await server.serve(logRequests: false);
   }
