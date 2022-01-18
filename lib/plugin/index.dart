@@ -31,6 +31,14 @@ abstract class PolkawalletPlugin implements PolkawalletPluginBase {
 
   final recoveryEnabled = false;
 
+  Widget? getAggregatedAssetsWidget(
+          {String priceCurrency = 'USD',
+          bool hideBalance = false,
+          double rate = 1.0,
+          @required Function? onSwitchBack,
+          @required Function? onSwitchHideBalance}) =>
+      null;
+
   /// Plugin should retrieve [networkState] & [networkConst] while start
   NetworkStateData get networkState {
     try {
@@ -51,10 +59,6 @@ abstract class PolkawalletPlugin implements PolkawalletPluginBase {
       '${balance_cache_key}_${basic.name}_$pubKey';
 
   Future<void> updateNetworkState() async {
-    // final state = await Future.wait([
-    //   sdk.api.service.setting.queryNetworkConst(),
-    //   sdk.api.service.setting.queryNetworkProps(),
-    // ]);
     final state = await sdk.api.service.setting.queryNetwork();
     if (state != null) {
       _cache.write(_getNetworkCacheKey(net_const_cache_key), state["const"]);

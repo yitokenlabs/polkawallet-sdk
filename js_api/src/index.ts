@@ -1,4 +1,6 @@
 import { WsProvider, ApiPromise } from "@polkadot/api";
+import { KUSAMA_GENESIS, POLKADOT_GENESIS, STATEMINE_GENESIS } from "./constants/networkSpect";
+import localMetadata from "./constants/networkMetadata";
 import { subscribeMessage, getNetworkConst, getNetworkProperties } from "./service/setting";
 import keyring from "./service/keyring";
 import account from "./service/account";
@@ -16,22 +18,40 @@ function send(path: string, data: any) {
 send("log", "main js loaded");
 (<any>window).send = send;
 
+async function connectAll(nodes: string[]) {
+  return Promise.race(nodes.map(node => connect([node])));
+}
+
 /**
  * connect to a specific node.
  *
  * @param {string} nodeEndpoint
  */
 async function connect(nodes: string[]) {
+  (<any>window).api = undefined;
+  
   return new Promise(async (resolve, reject) => {
     const wsProvider = new WsProvider(nodes);
     try {
       const res = await ApiPromise.create({
         provider: wsProvider,
+        metadata: {
+          [`${KUSAMA_GENESIS}-9122`]: localMetadata["kusama"],
+          [`${POLKADOT_GENESIS}-9122`]: localMetadata["polkadot"],
+          [`${STATEMINE_GENESIS}-504`]: localMetadata["statemine"],
+        },
       });
-      (<any>window).api = res;
-      const url = nodes[(<any>res)._options.provider.__private_9_endpointIndex];
-      send("log", `${url} wss connected success`);
-      resolve(url);
+      if (!(<any>window).api) {
+        (<any>window).api = res;
+        const url = nodes[(<any>res)._options.provider.__private_16_endpointIndex];
+        send("log", `${url} wss connected success`);
+        resolve(url);
+      } else {
+        res.disconnect();
+        const url = nodes[(<any>res)._options.provider.__private_16_endpointIndex];
+        send("log", `${url} wss success and disconnected`);
+        resolve(url);
+      }
     } catch (err) {
       send("log", `connect failed`);
       wsProvider.disconnect();
@@ -48,6 +68,7 @@ const test = async () => {
 const settings = {
   test,
   connect,
+  connectAll,
   subscribeMessage,
   getNetworkConst,
   getNetworkProperties,
