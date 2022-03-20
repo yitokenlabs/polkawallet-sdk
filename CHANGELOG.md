@@ -1,3 +1,22 @@
+## [0.4.3] - 20220304
+
+* bump polkadot-js/api v7.10.1
+* fix javascript polyfill issue
+
+## [0.4.2] - 20220221
+
+* bump polkadot-js/api v7.9.1
+* bump typescript v4.5.5
+* bump webview_flutter: ^3.0.0
+
+## [0.4.1] - 20220209
+
+* bump polkadot-js/api v7.2.1
+* update offline-signature api
+* update parachains api
+* update assets api for statemine
+* add plugin.appUtils for auto routing
+
 ## [0.4.0] - 20220104
 
 * bump polkadot-js/api v7.1.1

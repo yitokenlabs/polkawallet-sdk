@@ -7,9 +7,15 @@ class ServiceParachain {
 
   final SubstrateService serviceRoot;
 
+  Future<Map?> queryParasOverview() async {
+    final res = await serviceRoot.webView!
+        .evalJavascript('parachain.queryParasOverview(api)') as Map?;
+    return res;
+  }
+
   Future<Map?> queryAuctionWithWinners() async {
-    final dynamic res = await serviceRoot.webView!
-        .evalJavascript('parachain.queryAuctionWithWinners(api)');
+    final res = await serviceRoot.webView!
+        .evalJavascript('parachain.queryAuctionWithWinners(api)') as Map?;
     return res;
   }
 

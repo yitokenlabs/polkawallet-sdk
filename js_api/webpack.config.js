@@ -4,11 +4,12 @@ const webpack = require("webpack");
 const config = {
   entry: "./src/index.ts",
   output: {
+    publicPath: path.resolve(__dirname, ""),
     path: path.resolve(__dirname, "dist"),
     filename: "main.js",
   },
   resolve: {
-    extensions: [".ts", ".js", ".mjs", ".json"],
+    extensions: [".ts", ".js", ".mjs", ".cjs", ".json"],
     fallback: { crypto: require.resolve("crypto-browserify"), stream: require.resolve("stream-browserify") },
   },
   plugins: [
@@ -27,6 +28,16 @@ const config = {
         test: /\.mjs$/,
         include: /node_modules/,
         type: "javascript/auto",
+      },
+      {
+        test: /\.cjs$/,
+        include: path.resolve(__dirname, "node_modules/@polkadot/"),
+        use: "babel-loader",
+      },
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, "node_modules/@polkadot/"),
+        use: "babel-loader",
       },
     ],
   },

@@ -11,6 +11,7 @@ import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/service/webViewRunner.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
+import 'package:polkawallet_sdk/utils/app.dart';
 
 const String sdk_cache_key = 'polka_wallet_sdk_cache';
 const String net_state_cache_key = 'network_state';
@@ -31,12 +32,21 @@ abstract class PolkawalletPlugin implements PolkawalletPluginBase {
 
   final recoveryEnabled = false;
 
+  final appUtils = AppUtils();
+
+  /// The App will display this widget in assets page
   Widget? getAggregatedAssetsWidget(
           {String priceCurrency = 'USD',
           bool hideBalance = false,
           double rate = 1.0,
           @required Function? onSwitchBack,
           @required Function? onSwitchHideBalance}) =>
+      null;
+
+  /// The App will display this widget in native token detail page
+  /// @param[transferType] = 0 | 1 | 2, (0 = all, 1 = in, 2 = out)
+  Widget? getNativeTokenTransfers(
+          {required String address, int transferType = 0}) =>
       null;
 
   /// Plugin should retrieve [networkState] & [networkConst] while start

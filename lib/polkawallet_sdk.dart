@@ -12,7 +12,7 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 class WalletSDK {
   late PolkawalletApi api;
 
-  late SubstrateService _service;
+  final _service = SubstrateService();
 
   /// webView instance, this is the only instance of FlutterWebViewPlugin
   /// in App, we need to get it and reuse in other sdk.
@@ -28,7 +28,6 @@ class WalletSDK {
   }) async {
     final c = Completer();
 
-    _service = SubstrateService();
     await _service.init(
       keyring,
       webViewParam: webView,
