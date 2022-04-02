@@ -42,6 +42,7 @@ class SubstrateService {
     Function? onInitiated,
     String? jsCode,
     int port = 8080,
+    Function? socketDisconnectedAction,
   }) async {
     keyring = ServiceKeyring(this);
     setting = ServiceSetting(this);
@@ -58,6 +59,6 @@ class SubstrateService {
 
     _web = webViewParam ?? WebViewRunner();
     await _web!.launch(keyring, keyringStorage, onInitiated, jsCode: jsCode,
-        port: port);
+        port: port, socketDisconnectedAction: socketDisconnectedAction);
   }
 }

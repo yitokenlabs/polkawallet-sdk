@@ -29,6 +29,7 @@ class WebViewRunner {
     Function? onLaunched, {
     String? jsCode,
     int port = 8080,
+    Function? socketDisconnectedAction,
   }) async {
     /// reset state before webView launch or reload
     _msgHandlers = {};
@@ -61,6 +62,10 @@ class WebViewRunner {
             } else {
               jsCodeStarted = 0;
             }
+          }
+          if (message.message.contains("WebSocket is not connected") &&
+              socketDisconnectedAction != null) {
+            socketDisconnectedAction();
           }
           if (message.messageLevel != ConsoleMessageLevel.LOG) return;
 
